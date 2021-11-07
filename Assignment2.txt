@@ -1,0 +1,70 @@
+Assignment2a
+-------------------------------------------------------
+using System;
+using System.Collections.Generic;
+
+namespace Assignment2a
+{
+class Program
+{  
+   public static void Main(string[] args)
+    {
+        Dictionary<int,string> dictionary= new Dictionary<int,string>();
+        dictionary.Add(1,"firstItem");
+        dictionary.Add(2,"secondItem");
+        dictionary.Add(3,"thirdItem");
+        dictionary.Add(4,"fourthItem");
+        dictionary.Add(5,"fifthItem");
+   
+    string result;
+  if(dictionary.TryGetValue(5, out result))
+  {
+  Console.Write(result);
+  }
+}
+}
+}
+-------------------------------------------------------------
+Assignment2b
++++++++++++++
+using System;
+using System.Threading;
+
+
+class Program
+{
+static int Total=0;
+
+public static void Main()
+{
+Thread thread1 = new Thread(Program.AddNumbers);
+Thread thread2 = new Thread(Program.AddNumbers);
+Thread thread3 = new Thread(Program.AddNumbers);
+Thread thread4 = new Thread(Program.AddNumbers);
+
+thread1.Start();
+thread2.Start();
+thread3.Start();
+thread4.Start();
+
+thread1.Join();
+thread2.Join();
+thread3.Join();
+thread4.Join();
+
+Console.WriteLine("Total Count=" +Total);
+}
+
+static object _lock = new object();
+public static void AddNumbers()
+{
+
+for(int i=1; i<=100; i++)
+{
+lock(_lock)
+{
+Total++;
+}
+}
+}
+}

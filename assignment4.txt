@@ -1,0 +1,20 @@
+var query = from order in workOrders
+                  join plan in plans
+                 on order.WorkOrderNumber equals plan.WorkOrderNumber
+            where plan.ScheduledDate <= DateTime.Now
+            select new
+            {
+                order.WorkOrderNumber,
+                order.Description
+            };
+-------------------------------------------------------------------
+var query = from order in workOrders
+                  join plan in plans
+                 on order.WorkOrderNumber equals plan.WorkOrderNumber
+
+            select new
+            {
+                order.WorkOrderNumber,
+                order.Description,
+                plan.ScheduledDate
+            };

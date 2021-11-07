@@ -1,0 +1,100 @@
+Assignment 3a
+===================================
+Different filters available in web api are
+
+1. Authentication filter
+2. Authorization filter
+3.Action filter
+4.Override filter
+5.Exception filter
+
+Example by using Authorization  filter
+------------------------------------------
+Authorization  filter  is used to  allow only users that matches with existing credentials before action methods execute and restrict the other users.
+
+
+public class Employee
+{
+public static bool Login(string username, string password)
+{
+// checking credentials exist in database
+
+return IsEmployeeExists(username,password);
+}
+}
+
+public class CustomAuthenticationAttribute: AuthorizationFilterAttribute
+{
+public override void OnAuthorization(HttpActionContext context)
+{
+if(context.Request.Headers.Authorization==null)
+{
+context.Response= context.Request.CreateResponse(HttpStatusCode.Unauthorized);
+}
+else
+{
+string authToken= context.Request.Headers.Authorization.Parameter;
+string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(authToken));
+
+string[] credentials = decoded.Split(':');
+
+string username= credentails[0];
+string password = credentails[1];
+
+if(Employee.Login(username,password)
+{
+Thread.CurentPrincipal= new GenericPrincipal(new GenericIdentity(username),null);
+}
+else
+{
+context.Response= context.Request.CreateResponse(HttpStatusCode.Unauthorized);
+}
+}
+}
+}
+}
+
+public class TestController : ApiController
+{
+[CustomAuthenticationAttribute]
+public void TestMethod(){
+}
+}
+----------------------------------------------------------------------------
+Assignment 3b
+-----------------
+private static string Url = "http://googleapis.com/send/";
+
+string SERVER_API_KEY="adddwdff_11ddfafd144ADFAfaffaf";
+
+public static async Task GetData()
+{
+ 
+    using (var client = new HttpClient())   
+    {
+                
+        client.Method = "post";      
+        client.Headers.Add(string.Format("Authorization: key={0}", SERVER_API_KEY));
+
+        client.BaseAddress = new Uri(Url);
+        HttpResponseMessage response = await client.GetAsync(Url);
+
+        if (response.IsSuccessStatusCode)
+        {
+           Console.Write("message send successfully");
+        }
+        
+    }
+}
+====================================================================
+
+Assignment 3c
+-----------------
+
+Task is used to call asynchronous method from synchronous method
+
+var task = Task.Run(async () => await TestMethod());
+
+
+
+

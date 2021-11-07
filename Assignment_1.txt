@@ -1,0 +1,72 @@
+using System;
+using System.Threading;
+
+namespace Assignment_1
+{
+class Program
+{    
+    const int N = 10;
+
+    static object _lock = new object();
+
+    static void Main(string[] args)
+    {
+        Thread oddThread = new Thread(OddNumbers);
+        Thread evenThread = new Thread(EvenNumbers);
+
+        evenThread.Start();
+        oddThread.Start();
+
+        oddThread.Join();
+        evenThread.Join();
+        
+    }
+
+    
+  public  static void OddNumbers()
+    {
+         bool isexist=false;
+        try
+        {  
+            Monitor.Enter(_lock, ref isexist);
+            for (int i = 1; i <= N; i = i + 2)
+            {
+                Console.Write(" " + i);  
+                Monitor.Pulse(_lock);
+                bool isLast = i == N - 1;
+                if (!isLast)
+                    Monitor.Wait(_lock); 
+            }
+        }
+        finally
+        {
+            if(isexist)
+            Monitor.Exit(_lock);
+        }
+    }
+
+    
+ public   static void EvenNumbers()
+    {
+         bool isexist=false;
+        try
+        {          
+            Monitor.Enter(_lock, ref isexist);
+            for (int i = 0; i <= N; i = i + 2)
+            {
+                Console.Write(" " + i);
+                Monitor.Pulse(_lock);
+                bool isLast = i == N;
+                if (!isLast)
+                    Monitor.Wait(_lock);
+            }
+        }
+        finally
+        {
+            if(isexist)
+            Monitor.Exit(_lock);
+        }
+
+    }
+}
+}
